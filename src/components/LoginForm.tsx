@@ -62,7 +62,6 @@ function LoginForm({ email, password }: LoginDetails) {
       <form noValidate onSubmit={handleSubmit(onSubmit)}>
         <Stack spacing={2} 
         width={700}
-
         >
           <TextField
             label="Email"
@@ -78,7 +77,7 @@ function LoginForm({ email, password }: LoginDetails) {
             error={!!errors.email}
             helperText={errors.password?.message}
           />
-          <Link href="#">Already have an account?</Link>
+          <Link href="/register">Don't have an account?</Link>
           <Button type="submit" variant="contained" color="primary">
             Login
           </Button>
