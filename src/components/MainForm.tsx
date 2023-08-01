@@ -2,7 +2,7 @@ var heading: string;
 
 function MainForm(){
 const handleSubmit = () =>{
- if(heading=== 'Login'){
+ if(heading === 'Login'){
   alert('Please login');
  }else{
  alert('Please register');

@@ -1,6 +1,7 @@
+import '../styles/Headings.scss';
+
 interface MainPageHeaders{
   heading: 'Login' | 'Create an account' ;
-  onChange?: (heading: string) => void;
 }
 
 function MainPageHeaders({heading}: MainPageHeaders){
