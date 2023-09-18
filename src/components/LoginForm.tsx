@@ -9,7 +9,7 @@
 import { TextField, Button, Stack, Link } from "@mui/material";
 import { useForm } from "react-hook-form";
 import "../styles/LoginForm.scss";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, getFirestore, doc, getDoc, getDocs } from "firebase/firestore";
 import {db} from '../environment';
 import MainPageHeaders from "./MainpageHeader";
 
@@ -53,17 +53,22 @@ function LoginForm({ email, password }: LoginDetails) {
     },
   });
   const onSubmit = async (e:any) => {
-    e.preventDefault;  
-   console.log(e);
+    console.log(e.email + e.password);
     try {
-        const docRef = await addDoc(collection(db, "users"), {
-            ... e
-        });
-        console.log("Document written with ID: ", docRef.id);
-      } catch (e) {
-        console.error("Error adding document: ", e);
+      const docRef = await getDocs(collection(db, "users"));
+      if(!docRef.empty){
+        docRef.forEach(doc =>{
+          if(doc.data().email == e.email && doc.data().password == e.password){
+            return true;
+          }
+          return false;
+        })
       }
-  }
+    } catch (e) {
+      console.error("User does not exist ", e);
+
+    }
+}
   //passes the state object changing to a constant
   const { register, handleSubmit, formState } = form;
   const { errors } = formState;
@@ -86,7 +91,7 @@ function LoginForm({ email, password }: LoginDetails) {
             label="Password"
             type="password"
             {...register("password", { required: "Password is required" })}
-            error={!!errors.email}
+            error={!!errors.password}
             onChange ={event => { form.setValue('password', event.target.value)}}
             helperText={errors.password?.message}
           />
