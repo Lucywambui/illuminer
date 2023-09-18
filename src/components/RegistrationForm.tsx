@@ -13,6 +13,8 @@
 import { useForm } from "react-hook-form";
 import MainPageHeaders from "./MainpageHeader";
 import { Button, Link, Stack, TextField } from "@mui/material";
+import { addDoc, collection } from "firebase/firestore";
+import { db } from "../environment";
 
 // export default Alert;
 
@@ -32,9 +34,20 @@ function RegistrationForm({FirstName, LastName, email, password}: RegistrationDe
       password: "",
     },
   });
-  const onSubmit = (data: RegistrationDetails) => {
-    console.log(data);
-  };
+
+  //Creates a new user in the firebase db 
+  const onSubmit = async (e:any) => {
+    e.preventDefault;  
+   console.log(e);
+    try {
+        const docRef = await addDoc(collection(db, "users"), {
+            ... e
+        });
+        console.log("Document written with ID: ", docRef.id);
+      } catch (e) {
+        console.error("Error adding document: ", e);
+      }
+  }
   //passes the state object changing to a constant
   const { register, handleSubmit, formState } = form;
   const { errors } = formState;
@@ -47,7 +60,7 @@ function RegistrationForm({FirstName, LastName, email, password}: RegistrationDe
 
         >
          <TextField
-            label="FirstName"
+            label="First Name"
             type="firstName"
             {...register("FirstName", { required: "First name is required" })}
             error={!!errors.email}

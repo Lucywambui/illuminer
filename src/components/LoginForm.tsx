@@ -9,6 +9,8 @@
 import { TextField, Button, Stack, Link } from "@mui/material";
 import { useForm } from "react-hook-form";
 import "../styles/LoginForm.scss";
+import { collection, addDoc } from "firebase/firestore";
+import {db} from '../environment';
 import MainPageHeaders from "./MainpageHeader";
 
 // function NotesGroup({notes, heading, onSelectNote}: NotesGroupProps) {
@@ -50,9 +52,18 @@ function LoginForm({ email, password }: LoginDetails) {
       password: "",
     },
   });
-  const onSubmit = (data: LoginDetails) => {
-    console.log(data);
-  };
+  const onSubmit = async (e:any) => {
+    e.preventDefault;  
+   console.log(e);
+    try {
+        const docRef = await addDoc(collection(db, "users"), {
+            ... e
+        });
+        console.log("Document written with ID: ", docRef.id);
+      } catch (e) {
+        console.error("Error adding document: ", e);
+      }
+  }
   //passes the state object changing to a constant
   const { register, handleSubmit, formState } = form;
   const { errors } = formState;
@@ -68,6 +79,7 @@ function LoginForm({ email, password }: LoginDetails) {
             type="email"
             {...register("email", { required: "Email is required" })}
             error={!!errors.email}
+            onChange={event => { form.setValue('email', event.target.value) }}
             helperText={errors.email?.message}
           />
           <TextField
@@ -75,6 +87,7 @@ function LoginForm({ email, password }: LoginDetails) {
             type="password"
             {...register("password", { required: "Password is required" })}
             error={!!errors.email}
+            onChange ={event => { form.setValue('password', event.target.value)}}
             helperText={errors.password?.message}
           />
           <Link href="/register">Don't have an account?</Link>
