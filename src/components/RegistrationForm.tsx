@@ -15,6 +15,7 @@ import MainPageHeaders from "./MainpageHeader";
 import { Button, Link, Stack, TextField } from "@mui/material";
 import { addDoc, collection } from "firebase/firestore";
 import { db } from "../environment";
+import * as React from "react";
 
 // export default Alert;
 
@@ -37,9 +38,11 @@ function RegistrationForm({FirstName, LastName, email, password}: RegistrationDe
 
   //Creates a new user in the firebase db 
   const onSubmit = async (e:any) => {
-    e.preventDefault;  
+    e.preventDefault();
+
    console.log(e);
     try {
+     
         const docRef = await addDoc(collection(db, "users"), {
             ... e
         });
@@ -48,8 +51,9 @@ function RegistrationForm({FirstName, LastName, email, password}: RegistrationDe
         console.error("Error adding document: ", e);
       }
   }
+ 
   //passes the state object changing to a constant
-  const { register, handleSubmit, formState } = form;
+  const { register, handleSubmit, formState, setError } = form;
   const { errors } = formState;
   return (
     <>
@@ -62,34 +66,34 @@ function RegistrationForm({FirstName, LastName, email, password}: RegistrationDe
          <TextField
             label="First Name"
             type="firstName"
-            {...register("FirstName", { required: "First name is required" })}
-            error={!!errors.email}
+            {...register("FirstName", { required: true })}
+            error = {!!errors.FirstName?.message}
             helperText={errors.FirstName?.message}
           />
  <TextField
             label="Last Name"
             type="lastName"
-            {...register("LastName", { required: " Last name is required" })}
-            error={!!errors.email}
+            {...register("LastName", { required: true })}
+            error={!!errors.LastName?.message}
             helperText={errors.LastName?.message}
           />
           <TextField
             label="Email"
             type="email"
-            {...register("email", { required: "Email is required" })}
-            error={!!errors.email}
+            {...register("email", { required: true, })}
+            error={!!errors.email?.message}
             helperText={errors.email?.message}
           />
           <TextField
             label="Password"
             type="password"
-            {...register("password", { required: "Password is required" })}
-            error={!!errors.email}
+            {...register("password", { required: true, minLength: 6, maxLength: 12 })}
+            error={!!errors.password?.message}
             helperText={errors.password?.message}
           />
-          <Link href="/">Already have an account?</Link>
-          <Button type="submit" variant="contained" color="primary">
-            Login
+          <Link id="link" href="/">Already have an account?</Link>
+          <Button id="button" type="submit" variant="contained">
+            Register
           </Button>
         </Stack>
       </form>
